@@ -48,7 +48,7 @@ hold on;
 plot(u2d,"g");
 plot(y2,"k");
 legend("u2","u2d","y2");
-title("Dataset 1");
+title("Dataset 2");
 
 sgtitle("Input e output");
 
