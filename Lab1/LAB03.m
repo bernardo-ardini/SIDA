@@ -1,0 +1,59 @@
+clear;
+close all;
+
+%% PART 1
+
+N=100;
+u=(1:N)';
+lambdas=[1 1 1 10];
+betas=[20 1 150 20];
+
+e=randn(N,10); % generazione di 10 vettori casuali di dimensione N con distribuzione Normal(0,eye(N))
+
+for i=1:4
+    lambda=lambdas(i);
+    beta=betas(i);
+    K=lambda*Gaussian_kernel(u,u,beta);
+    L=chol(K,"lower");
+    subplot(2,2,i);
+    plot(L*e);
+    title("lambda="+num2str(lambda)+", beta="+num2str(beta));
+end
+
+%% PART 2
+
+clear;
+
+load("manipulator.mat");
+u1d_dot=derivative(u1d,Ts);
+u2d_dot=derivative(u2d,Ts);
+
+sigma2=4.2; % varianza del rumore
+
+x1=[u1 u1d u1d_dot];
+x2=[u2 u2d u2d_dot];
+
+% stima MAP della funzione g
+gmap=@(x,lambda,beta) lambda*Gaussian_kernel(x,x1,beta)*((lambda*Gaussian_kernel(x1,x1,beta)+sigma2*eye(N))\y1);
+
+% disegniamo le previsioni di y2 per diversi valori di lambda e beta
+
+figure;
+
+% lambda=1e4, beta=560
+subplot(1,3,1);
+plot(gmap(x2,1e4,560),"r");
+hold on;
+plot(y2,"b");
+
+% lambda=1, beta=560
+subplot(1,3,2);
+plot(gmap(x2,1,560),"r");
+hold on;
+plot(y2,"b");
+
+% lambda=1e4, beta=50
+subplot(1,3,3);
+plot(gmap(x2,1e4,50),"r");
+hold on;
+plot(y2,"b");

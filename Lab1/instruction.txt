@@ -1,0 +1,25 @@
+answer-> return an handwritten of max 2 pages report, 
+MATLAB file upload LAB1XX.m only one for each group
+
+1st part:
+-draw a realization of a gaussian process
+
+2nd part:
+- application of non parametric gaussian process 
+- identify the inverse dynamic of a single link manipulator 
+
+Forward dynamic:
+apply a torque and then it correspond to a variation of angluar momentum \theta
+
+find the inverse from theta learn the force.
+
+Difficulty: we have three d vector theta, theta dot, theta double dot. INPUT LOCATION 
+
+in class
+g(u) = \bmatrix h(u(1)) & \vdots & h(u(N)) , h: \R \to \R and g: \R^n \to \R^n. 
+
+and (\E[g(\sim{u})g(u)^T])_{ij} = \E[h(\sim{u}(t))h(u(s))] = \lambda e^{...}
+
+here x \in \R^3 and h:\R^3\to \R. And g: M_{N,3} \to \R^N
+
+(\E[g(\sim{u})g(u)^T])_{ij} = E[[h(\sim{u}(t))h(u(s))] = \lambda e^{-\frac{1}{2} \|x(t\|
