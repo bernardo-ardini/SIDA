@@ -13,10 +13,12 @@ e=randn(N,10); % generazione di 10 vettori casuali di dimensione N con distribuz
 for i=1:4
     lambda=lambdas(i);
     beta=betas(i);
+
     K=lambda*Gaussian_kernel(u,u,beta);
     L=chol(K,"lower");
+
     subplot(2,2,i);
-    plot(L*e);
+    plot(L*e); % generiamo 10 vettori casuali di dimensione N con distribuzione Normal(0,K)
     title("lambda="+num2str(lambda)+", beta="+num2str(beta));
 end
 
@@ -25,6 +27,16 @@ end
 clear;
 
 load("manipulator.mat");
+
+% disegniamo input e output
+
+figure;
+
+subplot(1,2,1);
+plot("");
+
+% calcolo delle accelerazioni angolari
+
 u1d_dot=derivative(u1d,Ts);
 u2d_dot=derivative(u2d,Ts);
 
