@@ -107,7 +107,7 @@ sgtitle("Comparison between predictions and measurements of y2 for different hyp
 
 % calcolo degli errori relativi
 
-epsilon1=norm(y1-gmap(x1,1e4,560))/norm(y1,Inf);
-epsilon2=norm(y2-gmap(x2,1e4,560))/norm(y2,Inf);
+epsilon1=norm(y1-gmap(x1,1e4,560))/norm(y1,Inf)/sqrt(N);
+epsilon2=norm(y2-gmap(x2,1e4,560))/norm(y2,Inf)/sqrt(N);
 
 fprintf("\nRelative errors\n\nepsilon1=%f\nepsilon2=%f\n\n",epsilon1,epsilon2);
