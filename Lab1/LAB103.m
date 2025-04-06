@@ -19,10 +19,12 @@ for i=1:4
 
     subplot(2,2,i);
     plot(L*e); % generiamo 10 vettori casuali di dimensione N con distribuzione Normal(0,K)
+    xlabel("t");
+    ylabel("g");
     title("lambda="+num2str(lambda)+", beta="+num2str(beta));
 end
 
-sgtitle("Generazione di processi gaussiani");
+sgtitle("Generation of Gaussian processes");
 
 %% PART 2
 
@@ -39,6 +41,7 @@ plot(u1,"r");
 hold on;
 plot(u1d,"g");
 plot(y1,"k");
+xlabel("t");
 legend("u1","u1d","y1");
 title("Dataset 1");
 
@@ -47,10 +50,11 @@ plot(u2,"r");
 hold on;
 plot(u2d,"g");
 plot(y2,"k");
+xlabel("t");
 legend("u2","u2d","y2");
 title("Dataset 2");
 
-sgtitle("Input e output");
+sgtitle("Input and output");
 
 % calcolo delle accelerazioni angolari
 
@@ -74,7 +78,9 @@ subplot(1,3,1);
 plot(gmap(x2,1e4,560),"r");
 hold on;
 plot(y2,"b");
-legend("y2 previsto","y2 misurato");
+xlabel("t");
+ylabel("y");
+legend("y2 predicted","y2 measured");
 title("lambda=1e4, beta=560");
 
 % lambda=1, beta=560
@@ -82,7 +88,9 @@ subplot(1,3,2);
 plot(gmap(x2,1,560),"r");
 hold on;
 plot(y2,"b");
-legend("y2 previsto","y2 misurato");
+xlabel("t");
+ylabel("y");
+legend("y2 predicted","y2 measured");
 title("lambda=1, beta=560");
 
 % lambda=1e4, beta=50
@@ -90,7 +98,16 @@ subplot(1,3,3);
 plot(gmap(x2,1e4,50),"r");
 hold on;
 plot(y2,"b");
-legend("y2 previsto","y2 misurato");
+xlabel("t");
+ylabel("y");
+legend("y2 predicted","y2 measured");
 title("lambda=1e4, beta=50");
 
-sgtitle("Confronto tra previsione e misura di y2 al variare degli iperparametri");
+sgtitle("Comparison between predictions and measurements of y2 for different hyperparameters");
+
+% calcolo degli errori relativi
+
+epsilon1=norm(y1-gmap(x1,1e4,560))/norm(y1,Inf);
+epsilon2=norm(y2-gmap(x2,1e4,560))/norm(y2,Inf);
+
+fprintf("\nRelative errors\n\nepsilon1=%f\nepsilon2=%f\n\n",epsilon1,epsilon2);
