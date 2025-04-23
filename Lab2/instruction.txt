@@ -1,0 +1,4 @@
+Read the instruction in Lab2.pdf 
+and upload a zip file containing two .m file Lab2XX.m and V.m in Lab2-Matlab one only for each group
+
+Hand in an handwritten of max 2 pages individual by 30/04/2025
