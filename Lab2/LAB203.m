@@ -1,7 +1,6 @@
+%% OE parameter estimation, nB = 2, nF = 1, nk = 1
+% true parameter: [5 2 .81], sigma=0.9
 clear;clc;close all;
-
-%% OE parameter estimation
-%% true parameter: 5 2 .81, sigma=0.9
 
 %% plot of input output
 load("data.mat");
@@ -12,18 +11,74 @@ xlabel("t");
 ylabel("u");
 subplot(1,2,2);
 plot(y);
-title("Ouput");
+title("Output");
 xlabel("t");
 ylabel("y");
 
-%% Steepest Descent
+%% Steepest Descent Algorithm
 delta = 1e-4;
 flag_stop = true;
 k=1;
 theta = [0 0 0];
-% theta = [10 -2 -0.2];
+% theta = [10 -2 -0.2]; % other inital condition
 print = true;
-%% Il nostro povero codice
+
+while (flag_stop)
+    % compute current V,dV. the value V is called W not to conflict with the function V
+    b = [0 theta(1) theta(2)];
+    a = [1 theta(3)];
+    yest = filter(b,a,u);
+    err = y -yest;
+    W = 1/N * sum(err.^2); % V_{k-1}
+    Psi = [filter([0 1], [1 theta(3)], u), filter([0 0 1], [1 theta(3)], u), -filter([0 1], [1 theta(3)], yest)];
+    dV = -2/N * sum(err.*Psi);
+
+    % backtracking
+    mu=1;
+    while (abs(theta(3)-mu*dV(3))>=1)
+        mu=mu/2;
+    end
+    while (V(y,u,theta-mu*dV)-W>=0)
+        mu=mu/2;
+    end
+
+    theta = theta-mu*dV; % new estimate theta^(k)
+    
+    if (norm(dV)<=delta) % flag_stop on previous iteration gradient -> one iteration more
+        flag_stop=false;
+    end
+    if (print)
+        fprintf("Iteration %u:\n", k);
+        fprintf("V: %f\n", W);
+        fprintf("|dV|: %f\n", norm(dV));
+        fprintf("theta: [%f %f %f]\n", theta(1), theta(2), theta(3));
+        fprintf("\n");
+    end
+    k=k+1;
+end
+% summary for the final estimate
+fprintf("Final Estimate in %u iterations:\n", k-1);
+fprintf("V: %f\n", W);
+fprintf("|dV|: %f\n", norm(dV));
+fprintf("theta: [%f %f %f]\n", theta(1), theta(2), theta(3));
+fprintf("\n");
+
+%% Comparison with matlab toolbox: 
+% OE model estimation
+% orders_oe(1) = nB
+% orders_oe(2) = nF
+% orders_oe(3) = nk
+orders_oe = [2 1 1]; 
+data = iddata(y,u);
+m_oe = oe(data,orders_oe);
+
+% Plot the parameters of the estimated model
+fprintf("MATLAB estimate:\n");
+fprintf("sigma^2: %f\n", m_oe.NoiseVariance);
+fprintf("V: %f\n", V(y,u,[ m_oe.b(2), m_oe.b(3), m_oe.f(2)]))
+fprintf("theta: [%f %f %f]\n", m_oe.b(2), m_oe.b(3), m_oe.f(2));
+
+%% One step less -- Stop condition on |V'(\theta^(k)| 
 % % compute initial V,dV
 % b = [0 theta(1) theta(2)];
 % a = [1 theta(3)];
@@ -63,76 +118,3 @@ print = true;
 %     k=k+1;
 %     fprintf("\n");
 % end
-while (flag_stop)
-    % compute current V,dV
-    b = [0 theta(1) theta(2)];
-    a = [1 theta(3)];
-    yest = filter(b,a,u);
-    err = y -yest;
-    W = 1/N * sum(err.^2); % V_{k-1}
-    Psi = [filter([0 1], [1 theta(3)], u), filter([0 0 1], [1 theta(3)], u), -filter([0 1], [1 theta(3)], yest)];
-    dV = -2/N * sum(err.*Psi);
-
-    % backtracking
-    mu=1;
-    while (abs(theta(3)-mu*dV(3))>=1)
-        mu=mu/2;
-    end
-    while (V(y,u,theta-mu*dV)-W>=0)
-        mu=mu/2;
-    end
-    theta = theta-mu*dV;
-    
-    if (norm(dV)<=delta) % flag_stop on previous iteration gradient -> one iteration more
-        flag_stop=false;
-    end
-    if (print)
-        fprintf("Iteration %u:\n", k);
-        fprintf("V: %f\n", W);
-        fprintf("|dV|: %f\n", norm(dV));
-        fprintf("theta: [%f %f %f]\n", theta(1), theta(2), theta(3));
-        fprintf("\n");
-    end
-    k=k+1;
-end
-fprintf("Iteration %u:\n", k);
-fprintf("V: %f\n", W);
-fprintf("|dV|: %f\n", norm(dV));
-fprintf("theta: [%f %f %f]\n", theta(1), theta(2), theta(3));
-fprintf("\n");
-%% comparison with matlab toolbox
-data = iddata(y,u);
-
-% Estimation of an OE model
-
-% orders of the OE model
-% orders_oe(1) = nB
-% orders_oe(2) = nF
-% orders_oe(3) = nk
-orders_oe = [2 1 1]; 
-
-% OE model estimation
-m_oe = oe(data,orders_oe);
-
-% Plot the coefficient of the estimated model
-fprintf("MATLAB estimate:\n");
-fprintf("V: %f\n", m_oe.NoiseVariance);
-fprintf("theta: [%f %f %f]\n", m_oe.b(2), m_oe.b(3), m_oe.f(2));
-
-% the matlab and our estimate are close and take about the same running time. (without print in the loop of our implementation)
-% Anyway, since we have no control on the tolerance of the matlab estimate
-% the estimate parameters are slightly different
-
-% commenting out the check of theta \in Theta and not the decrease of V,
-% the estimate cannot blow up still and we reach convergence.
-
-% commenting out the check of the decrease of V,
-% the estimate stay bounded, because we are still checking bibo stability for the estimator, but it oscillates a lot without converging
-
-% commenting out both the check the estimate blows up in few iterations as
-% there is nothing preventing V to grow and theta_est to represent a non
-% bibo stable estimate.
-
-% changing the initial value of theta, the algorithm still converges to the
-% same value of theta, but with large number of iterations. We could
-% expected to reach local minima changing initial value

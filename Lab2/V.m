@@ -6,5 +6,6 @@ function obj = V(y,u,theta)
     % compute err_est
     err = y - yest;
     N = length(u);
+    % compute V
     obj = 1/N * sum(err.^2);
 end
