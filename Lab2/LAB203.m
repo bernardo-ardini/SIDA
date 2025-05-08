@@ -20,9 +20,9 @@ delta = 1e-4;
 flag_stop = true;
 k=1;
 theta = [0 0 0];
-% theta = [10 -2 -0.2]; % other inital condition
+theta = [10 -2 -0.2]; % other inital condition
 print = true;
-
+tic;
 while (flag_stop)
     % compute current V,dV. the value V is called W not to conflict with the function V
     b = [0 theta(1) theta(2)];
@@ -56,6 +56,7 @@ while (flag_stop)
     end
     k=k+1;
 end
+toc;
 % summary for the final estimate
 fprintf("Final Estimate in %u iterations:\n", k-1);
 fprintf("V: %f\n", W);
