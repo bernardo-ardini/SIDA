@@ -1,64 +1,48 @@
-clc;close all; clear;
+clc;
+close all;
+clear;
 
-N = 8000;
-Ts=1;
+N = 200;
+Ts = 1;
 k_sin = 5;
 u = idinput(N,'sine',[1/8 1/2],[-4 4],k_sin);
 
-%u = idinput(N,'sine',[1/8 1/2],[-4,4],[5, 1,1]);
 
-% Coefficientes of the actual model (e.g. ARX model):
-% numerators and denominators of the model with feedback
+% Actual Model
 Fden = [1, -0.96, 0.97];  a10 = -0.96; a20 = 0.97;
 Fnum = [0, 2.99, -0.2];   b00 = 2.99;  b10 = -0.2;  
 Gden = [1, -0.96, 0.97];
 Gnum = [1, 0, 0];
 
-% Generate NORMALIZED WGN noise en0 (i.e. en0 has variance equal to one)
 en0 = idinput(N,'rgs'); 
-
-% noise variance sigma0^2 of e0=sigma_0*en0
 noiseVar = 4.6;
 
-% Creation of the actual model (Ts is the sampling time, this parameter
-% is optional and the default value is Ts = 1)
 m0 = idpoly([],Fnum,Gnum,Gden,Fden,noiseVar,Ts); 
-
-% Creation of the iddata object (a container for all the identification 
-% data), in this case we store only the input data u
 u = iddata([],u,Ts); 
-
-% Creation of the iddata object, in this case we store only the normalized 
-% noise data en0
 en0 = iddata([],en0,Ts); 
 
-% Generation of the output data given model, input and noise
-y = sim(m0, [u en0]);
-
-% Creation of an iddata object for the output and input data 
+y = sim(m0, [u en0]); % output
 data = iddata(y,u);
 
-
-%% PEM method
+%% PEM methods
 
 disp("ARX model 1:")
-% Estimation of an ARX model
+% Estimation of an ARX model 1
 % orders of the ARX model
 % orders_arx(1) = nA
 % orders_arx(2) = nB
 % orders_arx(3) = nk
 orders_arx = [2 2 1]; 
 
-% ARX model estimation
-m_arx = arx(data,orders_arx);
+m_arx = arx(data,orders_arx); % estimate
 
 % Plot the coefficients of the estimated model
-m_arx.a % A(z)
-m_arx.b % B(z)
-m_arx.NoiseVariance % sigma^2
+fprintf("Estimate:\n");
+fprintf( 'Fden = [%1.2f, %1.2f, %1.2f]\n',m_arx.a(1),m_arx.a(2), m_arx.a(3)); % A(z)
+fprintf( 'Fnum = [%1.2f, %1.2f, %1.2f]\n',m_arx.b(1),m_arx.b(2), m_arx.b(3)); % B(z)
+fprintf('variance = %1.2f\n',m_arx.NoiseVariance); % sigma^2
 
-
-% Estimation of an ARMAX model
+% Estimation of an ARMAX model 1
 disp("ARMAX model 1:")
 
 % orders of the ARMAX model
@@ -68,80 +52,78 @@ disp("ARMAX model 1:")
 % orders_armax(4) = nk
 orders_armax = [2 2 1 1];
 
-% ARMAX model estimation
-m_armax = armax(data,orders_armax);
+m_armax = armax(data,orders_armax); % ARMAX model estimation
 
 % Plot the coefficient of the estimated model
-m_armax.a % A(z)
-m_armax.b % B(z)
-m_armax.c % C(z)
-m_armax.NoiseVariance % sigma^2
+% m_armax.a % A(z)
+% m_armax.b % B(z)
+% m_armax.c % C(z)
+% m_armax.NoiseVariance % sigma^2
 
+fprintf( 'Fden = [%1.2f, %1.2f, %1.2f]\n',m_armax.a(1),m_armax.a(2), m_armax.a(3)); % A(z)
+fprintf( 'Fnum = [%1.2f, %1.2f, %1.2f]\n',m_armax.b(1),m_armax.b(2), m_armax.b(3)); % B(z)
+fprintf( 'Gnum = [%1.2f, %1.2f]\n',m_armax.c(1),m_armax.c(2)); % B(z)
+
+fprintf('variance = %1.2f\n',m_armax.NoiseVariance); % sigma^2
 
 
 % Estimation of an ARX model 2
 disp("ARX model 2:")
 
-% orders of the ARX model
-% orders_arx(1) = nA
-% orders_arx(2) = nB
-% orders_arx(3) = nk
 orders_arx2 = [3 3 1]; 
 
-% ARX model estimation
 m_arx2 = arx(data,orders_arx2);
 
 % Plot the coefficients of the estimated model
-m_arx2.a % A(z)
-m_arx2.b % B(z)
-m_arx2.NoiseVariance % sigma^2
+fprintf("Estimate:\n");
+fprintf( 'Fden = [%1.2f, %1.2f, %1.2f, %1.2f]\n',m_arx2.a(1),m_arx2.a(2), m_arx2.a(3), m_arx2.a(4)); % A(z)
+fprintf( 'Fnum = [%1.2f, %1.2f, %1.2f, %1.2f]\n',m_arx2.b(1),m_arx2.b(2), m_arx2.b(3), m_arx2.b(4)); % B(z)
+fprintf('variance = %1.2f\n',m_arx2.NoiseVariance); % sigma^2
 
 % Estimation of an ARMAX model 2
 disp("ARMAX model 2:")
 
-% orders of the ARMAX model 2
-% orders_armax(1) = nA
-% orders_armax(2) = nB
-% orders_armax(3) = nC
-% orders_armax(4) = nk
 orders_armax2 = [3 3 1 1];
 
-% ARMAX model estimation
 m_armax2 = armax(data,orders_armax2);
 
 % Plot the coefficient of the estimated model
-m_armax2.a % A(z)
-m_armax2.b % B(z)
-m_armax2.c % C(z)
-m_armax2.NoiseVariance % sigma^2
+% m_armax2.a % A(z)
+% m_armax2.b % B(z)
+% m_armax2.c % C(z)
+% m_armax2.NoiseVariance % sigma^2
+
+fprintf( 'Fden = [%1.2f, %1.2f, %1.2f, %1.2f ]\n',m_armax2.a(1),m_armax2.a(2), m_armax2.a(3), m_armax2.a(4)); % A(z)
+fprintf( 'Fnum = [%1.2f, %1.2f, %1.2f, %1.2f]\n',m_armax2.b(1), m_armax2.b(2), m_armax2.b(3), m_armax2.b(4)); % B(z)
+fprintf( 'Gnum = [%1.2f, %1.2f]\n',m_armax2.c(1),m_armax2.c(2)); % B(z)
+
+fprintf('variance = %1.2f\n',m_armax2.NoiseVariance); % sigma^2
 
 %% INTERVALLI DI CONFIDENZA
+
 disp("ARX model 1:")
+orders_arx = [2 2 1]; 
 
-numIter  = 100;
-for 1:numIter
-    orders_arx = [2 2 1]; 
-    
-    m_arx = arx(data,orders_arx);
-    
-    % m_arx.a % A(z)
-    % m_arx.b % B(z)
-    % m_arx.NoiseVariance % sigma^2
-    
-    y = data.OutputData;
-    u = data.InputData;
-    
-    Psi = [[0;-y(1:end-1)], [0;0;-y(1:end-2)], [0;u(1:end-1)], [0;0;u(1:end-2)]]';
-    
-    P = m_arx.NoiseVariance * N* inv(Psi*Psi');
-    % aPEM = m_arx.a';
-    % bPEM = m_arx.b';
-    theta = [m_arx.a(2:end)'; m_arx.b(2:end)'];
-    theta0 = [a10; a20; b00; b10];
-    err = abs(theta - theta0);
-    confInt = 1.96/sqrt(N) * sqrt(diag(P));
-end
+m_arx = arx(data,orders_arx);
 
+% m_arx.a % A(z)
+% m_arx.b % B(z)
+% m_arx.NoiseVariance % sigma^2
 
+y = data.OutputData;
+u = data.InputData;
+
+Psi = [[0;-y(1:end-1)], [0;0;-y(1:end-2)], [0;u(1:end-1)], [0;0;u(1:end-2)]]';
+
+P = m_arx.NoiseVariance * N* inv(Psi*Psi');
+% aPEM = m_arx.a';
+% bPEM = m_arx.b';
+theta = [m_arx.a(2:end)'; m_arx.b(2:end)'];
+theta0 = [a10; a20; b00; b10];
+err = abs(theta - theta0);
+confInt = 1.96/sqrt(N) * sqrt(diag(P));
 T = table( err, confInt);
 disp(T);
+
+
+P

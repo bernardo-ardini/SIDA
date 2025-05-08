@@ -1,6 +1,6 @@
 clear; clc; close all;
 numIt = 500;
-N = 200;
+N = 8000;
 Ts=1;
 k_sin = 5;
 Fden = [1, -0.96, 0.97];  a10 = -0.96; a20 = 0.97;
