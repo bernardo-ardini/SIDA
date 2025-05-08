@@ -1,6 +1,6 @@
 clc;close all; clear;
 
-N = 200;
+N = 8000;
 Ts=1;
 k_sin = 5;
 u = idinput(N,'sine',[1/8 1/2],[-4 4],k_sin);
