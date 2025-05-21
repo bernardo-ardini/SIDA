@@ -156,20 +156,26 @@ bic4new = bic(m_bj4new);
 sure4new = sure(m_bj4new);
 
 %% CRITERIA WITH COMPLEXITY TERM
-aic_vec = [ai1, ai2, ai3, ai4, ai4new];
-bic_vec = [bic1, bic2, bic3, bic4, bic4new];
-sure_vec = [sure1, sure2, sure3, sure4, sure4new];
+aic_vec = [ai1, ai2, ai3, ai4new, ai4];
+bic_vec = [bic1, bic2, bic3, bic4new, bic4];
+sure_vec = [sure1, sure2, sure3, sure4new, sure4];
 
 figure(8)
 sgtitle("CRITERIA WITH COMPLEXITY TERM")
-subplot(1,3,1)
+ax = subplot(1,3,1);
 plot(aic_vec);
+ax.XTick = [1, 2, 3,4,5];
+xticklabels(["M1","M2", "M3", "M4new", "M4"])
 title("AIC")
-subplot(1,3,2)
+ax2 = subplot(1,3,2);
 plot(bic_vec);
+ax2.XTick = [1, 2, 3,4,5];
+xticklabels(["M1","M2", "M3", "M4new", "M4"])
 title("BIC")
-subplot(1,3,3)
+ax3 =subplot(1,3,3);
 plot(sure_vec);
+ax3.XTick = [1, 2, 3,4,5];
+xticklabels(["M1","M2", "M3", "M4new", "M4"])
 title("SURE")
 
 
@@ -300,5 +306,5 @@ figure(9)
 sgtitle("HOLD OUT CROSS VALIDATION")
 for h = hhs
     subplot(2,2,h)
-    compare(data_v,m_bj1, m_bj2, m_bj3, m_bj4, m_bj4new,h,opt)
+    compare(data_v,m_bj1, m_bj2, m_bj3, m_bj4new, m_bj4,h,opt)
 end

@@ -21,9 +21,10 @@ m_bj1.f % F(z)
 m_bj1.NoiseVariance % sigma^2
 
 figure(7)
+sgtitle("ZERO POLE CANCELLATION ANALYSIS")
 subplot(2,3,1);
 iopzplot(m_bj1);
-
+title("Model 1");
 
 ai1 = aic(m_bj1);
 bic1 = bic(m_bj1);
@@ -52,8 +53,11 @@ m_bj2.d % D(z)
 m_bj2.f % F(z)
 m_bj2.NoiseVariance % sigma^2
 
-figure
+figure(7)
+subplot(2,3,2);
 iopzplot(m_bj2);
+title("Model 2");
+
 ai2 = aic(m_bj2);
 bic2 = bic(m_bj2);
 sure2 = sure(m_bj2);
@@ -80,8 +84,10 @@ m_bj3.d % D(z)
 m_bj3.f % F(z)
 m_bj3.NoiseVariance % sigma^2
 
-figure
+figure(7)
+subplot(2,3,3);
 iopzplot(m_bj3);
+title("Model 3");
 
 ai3 = aic(m_bj3);
 bic3 = bic(m_bj3);
@@ -108,8 +114,11 @@ m_bj4.d % D(z)
 m_bj4.f % F(z)
 m_bj4.NoiseVariance % sigma^2
 
-figure
+figure(7)
+subplot(2,3,4);
 iopzplot(m_bj4);
+title("Model 4");
+
 ai4 = aic(m_bj4);
 bic4 = bic(m_bj4);
 sure4 = sure(m_bj4);
@@ -137,26 +146,38 @@ m_bj4new.d % D(z)
 m_bj4new.f % F(z)
 m_bj4new.NoiseVariance % sigma^2
 
-figure
-iopzplot(m_bj4new); %% non ha più la zero pole cancellation
+figure(7)
+subplot(2,3,5);
+iopzplot(m_bj4new);
+title("Model 4new"); %% non ha più la zero pole cancellation
+
 ai4new = aic(m_bj4new);
 bic4new = bic(m_bj4new);
 sure4new = sure(m_bj4new);
 
 %% CRITERIA WITH COMPLEXITY TERM
-aic_vec = [ai1, ai2, ai3, ai4, ai4new];
-bic_vec = [bic1, bic2, bic3, bic4, bic4new];
-sure_vec = [sure1, sure2, sure3, sure4, sure4new];
+aic_vec = [ai1, ai2, ai3, ai4new, ai4];
+bic_vec = [bic1, bic2, bic3, bic4new, bic4];
+sure_vec = [sure1, sure2, sure3, sure4new, sure4];
 
-figure()
+figure(8)
+sgtitle("CRITERIA WITH COMPLEXITY TERM")
+ax = subplot(1,3,1);
 plot(aic_vec);
-hold on;
+ax.XTick = [1, 2, 3,4,5];
+xticklabels(["M1","M2", "M3", "M4new", "M4"])
+title("AIC")
+ax2 = subplot(1,3,2);
 plot(bic_vec);
-legend("aic", "bic");
-
-figure()
+ax2.XTick = [1, 2, 3,4,5];
+xticklabels(["M1","M2", "M3", "M4new", "M4"])
+title("BIC")
+ax3 =subplot(1,3,3);
 plot(sure_vec);
-legend("sure")
+ax3.XTick = [1, 2, 3,4,5];
+
+xticklabels(["M1","M2", "M3", "M4new", "M4"])
+title("SURE")
 
 
 %%  HOLD OUT CROSS VALIDATION
@@ -282,19 +303,9 @@ m_bj4new.NoiseVariance % sigma^2
 % one step ahead prediction to compute generalization error
 opt = compareOptions('InitialCondition','z');
 hhs = [1,2,3,4];
+figure(9)
+sgtitle("HOLD OUT CROSS VALIDATION")
 for h = hhs
-    figure
-    compare(data_v,m_bj1, m_bj2, m_bj3, m_bj4, m_bj4new,h,opt)
-    % 
-    % figure
-    % compare(data_v,m_bj2,h,opt)
-    % 
-    % figure
-    % compare(data_v,m_bj3,h,opt)
-    % 
-    % figure
-    % compare(data_v,m_bj4,h,opt)
-    % 
-    % figure
-    % compare(data_v,m_bj4new,h,opt)
+    subplot(2,2,h)
+    compare(data_v,m_bj1, m_bj2, m_bj3, m_bj4new, m_bj4,h,opt)
 end
