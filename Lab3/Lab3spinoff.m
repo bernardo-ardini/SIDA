@@ -1,5 +1,5 @@
 clear; clc; close all;
-numIt = 500;
+numIt = 1000;
 N = 8000;
 Ts=1;
 k_sin = 5;
@@ -9,6 +9,7 @@ Gden = [1, -0.96, 0.97];
 Gnum = [1, 0, 0];
 noiseVar = 4.6;
 out_of_int = zeros(4,1);
+res = zeros(4, numIt);
 
 for i=1:numIt
 
@@ -42,6 +43,19 @@ for i=1:numIt
     err = abs(theta - theta0);
     confInt = 1.96/sqrt(N) * sqrt(diag(P));
     out_of_int = out_of_int + (err>confInt);
+    res(:,i) = out_of_int/i * 100;
+    if (mod(i,100)==0)
+        disp(out_of_int/i * 100);
+    end
 end
 
-disp(out_of_int/numIt * 100);
+% disp(out_of_int/numIt * 100);
+figure()
+plot(res(1,:))
+hold on
+plot(res(2,:))
+hold on 
+plot(res(3,:))
+hold on 
+plot(res(4,:))
+title("Out of confidence interval 95%. N=200")

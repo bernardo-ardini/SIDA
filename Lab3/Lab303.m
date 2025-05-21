@@ -1,12 +1,12 @@
 clc;
 close all;
 clear;
-
-N = 200;
+for N = [200,8000]
+%N = 200;
+fprintf("N = %d\n", N);
 Ts = 1;
 k_sin = 5;
 u = idinput(N,'sine',[1/8 1/2],[-4 4],k_sin);
-
 
 % Actual Model
 Fden = [1, -0.96, 0.97];  a10 = -0.96; a20 = 0.97;
@@ -98,6 +98,7 @@ fprintf( 'Gnum = [%1.2f, %1.2f]\n',m_armax2.c(1),m_armax2.c(2)); % B(z)
 
 fprintf('variance = %1.2f\n',m_armax2.NoiseVariance); % sigma^2
 fprintf('\n');
+
 %% INTERVALLI DI CONFIDENZA
 
 disp("ARX model 1:")
@@ -125,3 +126,4 @@ T = table( err, confInt);
 disp(T);
 
 P
+end

@@ -1,0 +1,9 @@
+Learn model form data: BIKE SHARING SYSTEM
+many bikes in different place, bikes suitably distributed in area taking into account need of people. Now near uni. later next to train station
+
+understand dynamic of bike, maximizing conformt of people and reveneu
+input: weather condition, output: number of bike rented
+
+do this using pem and perform entire system identification prediction: 
+
+at the end upload matlab file Lab403.m (only one per group) and return an handwritten individual max 2 pages deadline 5th june nel suo ufficio, DEI/A entrata dietro il dei, there is door closed in the right ask to enter. and put in the mailbox  
