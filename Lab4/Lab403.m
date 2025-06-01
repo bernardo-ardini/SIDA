@@ -14,11 +14,11 @@ orders_bj1 = [1 1 1 1 1];
 
 m_bj1 = bj(data_d,orders_bj1);
 
-m_bj1.b % B(z)
-m_bj1.c % C(z)
-m_bj1.d % D(z) 
-m_bj1.f % F(z)
-m_bj1.NoiseVariance % sigma^2
+% m_bj1.b % B(z)
+% m_bj1.c % C(z)
+% m_bj1.d % D(z) 
+% m_bj1.f % F(z)
+% m_bj1.NoiseVariance % sigma^2
 
 figure(7)
 sgtitle("ZERO POLE CANCELLATION ANALYSIS")
@@ -33,25 +33,14 @@ sure1 = sure(m_bj1);
 
 %% MODEL 2
 disp("Model 2");
-% Estimation of a Box-Jenkins model
-
-% coefficients of the BJ model
-% orders_bj(1) = nB
-% orders_bj(2) = nC
-% orders_bj(3) = nD
-% orders_bj(4) = nF
-% orders_bj(5) = nk
 orders_bj2 = [2 2 2 1 1];
-
-% BJ model generation
 m_bj2 = bj(data_d,orders_bj2);
 
-% Plot the coefficient of the estimated model
-m_bj2.b % B(z)
-m_bj2.c % C(z)
-m_bj2.d % D(z) 
-m_bj2.f % F(z)
-m_bj2.NoiseVariance % sigma^2
+% m_bj2.b % B(z)
+% m_bj2.c % C(z)
+% m_bj2.d % D(z) 
+% m_bj2.f % F(z)
+% m_bj2.NoiseVariance % sigma^2
 
 figure(7)
 subplot(2,3,2);
@@ -64,25 +53,15 @@ sure2 = sure(m_bj2);
 
 %% MODEL 3
 disp("Model 3");
-% Estimation of a Box-Jenkins model
-
-% coefficients of the BJ model
-% orders_bj(1) = nB
-% orders_bj(2) = nC
-% orders_bj(3) = nD
-% orders_bj(4) = nF
-% orders_bj(5) = nk
 orders_bj3 = [4 4 4 3 1];
 
-% BJ model generation
 m_bj3 = bj(data_d,orders_bj3);
 
-% Plot the coefficient of the estimated model
-m_bj3.b % B(z)
-m_bj3.c % C(z)
-m_bj3.d % D(z) 
-m_bj3.f % F(z)
-m_bj3.NoiseVariance % sigma^2
+% m_bj3.b % B(z)
+% m_bj3.c % C(z)
+% m_bj3.d % D(z) 
+% m_bj3.f % F(z)
+% m_bj3.NoiseVariance % sigma^2
 
 figure(7)
 subplot(2,3,3);
@@ -94,25 +73,15 @@ bic3 = bic(m_bj3);
 sure3 = sure(m_bj3);
 
 %% MODEL 4
-% Estimation of a Box-Jenkins model
 disp("Model 4");
-% coefficients of the BJ model
-% orders_bj(1) = nB
-% orders_bj(2) = nC
-% orders_bj(3) = nD
-% orders_bj(4) = nF
-% orders_bj(5) = nk
 orders_bj4 = [6 6 6 5 1];
-
-% BJ model generation
 m_bj4 = bj(data_d,orders_bj4);
 
-% Plot the coefficient of the estimated model
-m_bj4.b % B(z)
-m_bj4.c % C(z)
-m_bj4.d % D(z) 
-m_bj4.f % F(z)
-m_bj4.NoiseVariance % sigma^2
+% m_bj4.b % B(z)
+% m_bj4.c % C(z)
+% m_bj4.d % D(z) 
+% m_bj4.f % F(z)
+% m_bj4.NoiseVariance % sigma^2
 
 figure(7)
 subplot(2,3,4);
@@ -124,27 +93,21 @@ bic4 = bic(m_bj4);
 sure4 = sure(m_bj4);
 
 % it shows two poles near two zeros
+% we therefore we decrease by two both nB and nF 
 
-%% MODEL 4
-% Estimation of a Box-Jenkins model
+%% MODEL 4new
 disp("Model 4new");
-% coefficients of the BJ model
-% orders_bj(1) = nB
-% orders_bj(2) = nC
-% orders_bj(3) = nD
-% orders_bj(4) = nF
-% orders_bj(5) = nk
-orders_bj4new = [4 6 6 3 1];
+orders_bj4new = [3 2 6 6 1];
 
 % BJ model generation
 m_bj4new = bj(data_d,orders_bj4new);
 
 % Plot the coefficient of the estimated model
-m_bj4new.b % B(z)
-m_bj4new.c % C(z)
-m_bj4new.d % D(z) 
-m_bj4new.f % F(z)
-m_bj4new.NoiseVariance % sigma^2
+% m_bj4new.b % B(z)
+% m_bj4new.c % C(z)
+% m_bj4new.d % D(z) 
+% m_bj4new.f % F(z)
+% m_bj4new.NoiseVariance % sigma^2
 
 figure(7)
 subplot(2,3,5);
@@ -182,8 +145,10 @@ title("SURE")
 %%  HOLD OUT CROSS VALIDATION
 
 M = length(u)/2;
-data_t = iddata(data_d.y(1:M), data_d.u(1:M)); % data_d(1:M)
-data_v = iddata(data_d.y(M+1:end), data_d.u(M+1:end));
+% data_t = iddata(data_d.y(1:M), data_d.u(1:M)); % data_d(1:M)
+% data_v = iddata(data_d.y(M+1:end), data_d.u(M+1:end));
+data_t = data_d(1:M);
+data_v = data_d(M+1:end);
 
 
 %% MODEL 1
@@ -200,11 +165,11 @@ orders_bj1 = [1 1 1 1 1];
 m_bj1 = bj(data_t,orders_bj1);
 
 % Plot the coefficient of the estimated model
-m_bj1.b % B(z)
-m_bj1.c % C(z)
-m_bj1.d % D(z) 
-m_bj1.f % F(z)
-m_bj1.NoiseVariance % sigma^2
+% m_bj1.b % B(z)
+% m_bj1.c % C(z)
+% m_bj1.d % D(z) 
+% m_bj1.f % F(z)
+% m_bj1.NoiseVariance % sigma^2
 
 
 
@@ -224,11 +189,11 @@ orders_bj2 = [2 2 2 1 1];
 m_bj2 = bj(data_t,orders_bj2);
 
 % Plot the coefficient of the estimated model
-m_bj2.b % B(z)
-m_bj2.c % C(z)
-m_bj2.d % D(z) 
-m_bj2.f % F(z)
-m_bj2.NoiseVariance % sigma^2
+% m_bj2.b % B(z)
+% m_bj2.c % C(z)
+% m_bj2.d % D(z) 
+% m_bj2.f % F(z)
+% m_bj2.NoiseVariance % sigma^2
 
 
 %% MODEL 3
@@ -247,11 +212,11 @@ orders_bj3 = [4 4 4 3 1];
 m_bj3 = bj(data_t,orders_bj3);
 
 % Plot the coefficient of the estimated model
-m_bj3.b % B(z)
-m_bj3.c % C(z)
-m_bj3.d % D(z) 
-m_bj3.f % F(z)
-m_bj3.NoiseVariance % sigma^2
+% m_bj3.b % B(z)
+% m_bj3.c % C(z)
+% m_bj3.d % D(z) 
+% m_bj3.f % F(z)
+% m_bj3.NoiseVariance % sigma^2
 
 
 %% MODEL 4
@@ -269,11 +234,11 @@ orders_bj4 = [6 6 6 5 1];
 m_bj4 = bj(data_t,orders_bj4);
 
 % Plot the coefficient of the estimated model
-m_bj4.b % B(z)
-m_bj4.c % C(z)
-m_bj4.d % D(z) 
-m_bj4.f % F(z)
-m_bj4.NoiseVariance % sigma^2
+% m_bj4.b % B(z)
+% m_bj4.c % C(z)
+% m_bj4.d % D(z) 
+% m_bj4.f % F(z)
+% m_bj4.NoiseVariance % sigma^2
 
 % it shows two poles near two zeros
 
@@ -286,17 +251,17 @@ disp("Model 4new");
 % orders_bj(3) = nD
 % orders_bj(4) = nF
 % orders_bj(5) = nk
-orders_bj4new = [4 6 6 3 1];
+orders_bj4new = [3 2 6 6 1];
 
 % BJ model generation
 m_bj4new = bj(data_t,orders_bj4new);
 
 % Plot the coefficient of the estimated model
-m_bj4new.b % B(z)
-m_bj4new.c % C(z)
-m_bj4new.d % D(z) 
-m_bj4new.f % F(z)
-m_bj4new.NoiseVariance % sigma^2
+% m_bj4new.b % B(z)
+% m_bj4new.c % C(z)
+% m_bj4new.d % D(z) 
+% m_bj4new.f % F(z)
+% m_bj4new.NoiseVariance % sigma^2
 
 
 % one step ahead prediction to compute generalization error
